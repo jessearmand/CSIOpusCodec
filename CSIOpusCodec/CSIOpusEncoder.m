@@ -25,7 +25,7 @@
 
 #import "CSIOpusEncoder.h"
 #include "CSIDataQueue.h"
-#include <opus/opus.h>
+#include "opus.h"
 #define BUFFER_LENGTH 4096
 
 @interface CSIOpusEncoder ()

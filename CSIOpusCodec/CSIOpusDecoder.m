@@ -25,7 +25,7 @@
 
 #import "CSIOpusDecoder.h"
 #include "CSIDataQueue.h"
-#include <opus/opus.h>
+#include "opus.h"
 
 @interface CSIOpusDecoder ()
 @property (assign) OpusDecoder *decoder;
