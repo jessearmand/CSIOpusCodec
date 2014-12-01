@@ -25,7 +25,7 @@
 
 #import "CSIOpusEncoder.h"
 #include "CSIDataQueue.h"
-#include "opus/opus.h"
+#include <opus/opus.h>
 #define BUFFER_LENGTH 4096
 
 @interface CSIOpusEncoder ()
@@ -43,15 +43,15 @@
 - (id)initWithSampleRate:(opus_int32)sampleRate channels:(int)channels frameDuration:(double)frameDuration
 {
     self = [super init];
-    
+
     if(self)
     {
-        
+
         NSLog(@"Creating an encoder using Opus version %s", opus_get_version_string());
-        
+
         int error;
         self.encoder = opus_encoder_create(sampleRate, channels, OPUS_APPLICATION_VOIP, &error);
-        
+
         if(error != OPUS_OK)
         {
             NSLog(@"Opus encoder encountered an error %s", opus_strerror(error));
@@ -61,7 +61,7 @@
         self.samplesPerFrame = (int)(sampleRate * frameDuration);
         int bytesPerSample = sizeof(opus_int16);
         self.bytesPerFrame = self.samplesPerFrame * bytesPerSample;
-        
+
         self.inputBuffer = CSIDataQueueCreate();
         self.encodeBuffer = malloc(BUFFER_LENGTH);
         self.frameBuffer = malloc((unsigned long)self.bytesPerFrame);
@@ -85,7 +85,7 @@
 
     CMBlockBufferRef blockBuffer = CMSampleBufferGetDataBuffer(sampleBuffer);
     AudioBufferList audioBufferList;
-     
+
     CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(sampleBuffer,
                                                             NULL,
                                                             &audioBufferList,
@@ -94,33 +94,33 @@
                                                             NULL,
                                                             kCMSampleBufferFlag_AudioBufferList_Assure16ByteAlignment,
                                                             &blockBuffer);
-    
-    
+
+
     return [self encodeBufferList:&audioBufferList];
 }
 
 - (NSArray *)encodeBufferList:(AudioBufferList *)audioBufferList
 {
     NSMutableArray *output = [NSMutableArray array];
-    
+
     for (UInt32 i=0; i < audioBufferList->mNumberBuffers; ++i) {
         AudioBuffer audioBuffer = audioBufferList->mBuffers[i];
         CSIDataQueueEnqueue(self.inputBuffer, audioBuffer.mData, audioBuffer.mDataByteSize);
     }
-    
+
     while ((int)CSIDataQueueGetLength(self.inputBuffer) > self.bytesPerFrame) {
         CSIDataQueueDequeue(self.inputBuffer, self.frameBuffer, (size_t)self.bytesPerFrame);
         opus_int32 result = opus_encode(self.encoder, self.frameBuffer, self.samplesPerFrame, self.encodeBuffer, BUFFER_LENGTH);
-        
+
         if(result < 0) {
             NSLog(@"Opus encoder encountered an error %s", opus_strerror(result));
             return nil;
         }
-        
+
         NSData *encodedData = [NSData dataWithBytes:self.encodeBuffer length:(NSUInteger)result];
         [output addObject:encodedData];
     }
-    
+
     return output;
 }
 

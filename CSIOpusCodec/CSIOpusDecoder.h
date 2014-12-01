@@ -25,7 +25,7 @@
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
-#import "opus/opus_types.h"
+#import <opus/opus_types.h>
 
 @interface CSIOpusDecoder : NSObject
 

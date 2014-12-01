@@ -25,7 +25,7 @@
 
 #import "CSIOpusDecoder.h"
 #include "CSIDataQueue.h"
-#include "opus/opus.h"
+#include <opus/opus.h>
 
 @interface CSIOpusDecoder ()
 @property (assign) OpusDecoder *decoder;
@@ -48,30 +48,30 @@
 - (id)initWithSampleRate:(opus_int32)sampleRate channels:(int)channels frameDuration:(double)frameDuration
 {
     self = [super init];
-    
+
     if(self)
     {
-        
+
         NSLog(@"Creating an encoder using Opus version %s", opus_get_version_string());
-        
+
         int error;
         _decoder = opus_decoder_create(sampleRate, channels, &error);
-        
+
         if(error != OPUS_OK)
         {
             NSLog(@"Opus encoder encountered an error %s", opus_strerror(error));
             return nil;
         }
-        
+
         _sampleRate = sampleRate;
         _frameDuration = frameDuration;
         _bytesPerSample = sizeof(opus_int16);
         _samplesPerFrame = (int)(sampleRate * frameDuration);
-        
+
         _outputBuffer = CSIDataQueueCreate();
         _decodeBuffer = malloc((_bytesPerSample * (size_t)_samplesPerFrame));
     }
-    
+
     return self;
 }
 
@@ -89,12 +89,12 @@
         NSLog(@"Opus decoder encountered an error %s", opus_strerror(result));
         return;
     }
-    
+
     @synchronized(self)
     {
         size_t bytesAvailable = (size_t)result * self.bytesPerSample;
         CSIDataQueueEnqueue(self.outputBuffer, self.decodeBuffer, bytesAvailable);
-        
+
         double bufferDuration = CSIDataQueueGetLength(self.outputBuffer) / self.sampleRate;
         if(bufferDuration > 0.5)
         {
@@ -113,9 +113,9 @@
         if(audioBuffer.mNumberChannels > 1) return NO;
         totalBytesRequested += audioBuffer.mDataByteSize;
     }
-    
+
     if(totalBytesRequested == 0) return 0;
-    
+
     @synchronized(self)
     {
         int bytesAvailable = (int)CSIDataQueueGetLength(self.outputBuffer);
@@ -124,13 +124,13 @@
 //            NSLog(@"Couldnt fill buffer. Needed %d bytes but only have %d", totalBytesRequested, bytesAvailable);
             return 0;
         }
-        
+
         for (UInt32 i=0; i < audioBufferList->mNumberBuffers; ++i)
         {
             AudioBuffer audioBuffer = audioBufferList->mBuffers[i];
             CSIDataQueueDequeue(self.outputBuffer, audioBuffer.mData, audioBuffer.mDataByteSize);
         }
-        
+
         return (int)totalBytesRequested;
     }
 }
