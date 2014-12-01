@@ -5,7 +5,7 @@ Objective-C wrapper for the [Opus Codec](http://www.opus-codec.org/) based on [O
 
 Usage
 
-    pod 'CSIOpusCodec', :git => 'https://github.com/jessearmand/CSIOpusCodec.git', :branch => 'master'
+    pod 'CSIOpusCodec'
 
 License
 
