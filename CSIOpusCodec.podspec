@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "CSIOpusCodec"
-  s.version      = "0.0.2"
+  s.version      = "0.0.3"
   s.summary      = "Another Objective-C wrapper for Opus Codec."
 
   s.description  = <<-DESC
@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => "MIT", :file => "LICENSE" }
   s.author       = "Sam Leitch"
   s.platform     = :ios
-  s.source       = { :git => "https://github.com/jessearmand/CSIOpusCodec.git", :tag => "0.0.2" }
+  s.source       = { :git => "https://github.com/jessearmand/CSIOpusCodec.git", :tag => "0.0.3" }
   s.requires_arc = true
 
   s.source_files  = "#{s.name}/*.{h,m,c}", "opus/include/*.h"
@@ -21,5 +21,5 @@ Pod::Spec.new do |s|
   s.public_header_files = "#{s.name}/*.h", "opus/include/*.h"
   s.preserve_paths = "opus/lib/libopus.a"
   s.vendored_libraries = 'opus/lib/libopus.a'
-  s.xcconfig = { "HEADER_SEARCH_PATHS" => "${PODS_ROOT}/opus/include", "LIBRARY_SEARCH_PATHS" => "${PODS_ROOT}/opus/lib" }
+  s.xcconfig = { "HEADER_SEARCH_PATHS" => "${PODS_ROOT}/#{s.name}/opus/include", "LIBRARY_SEARCH_PATHS" => "${PODS_ROOT}/#{s.name}/opus/lib" }
 end
