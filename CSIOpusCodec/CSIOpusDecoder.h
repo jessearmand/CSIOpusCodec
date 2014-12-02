@@ -29,6 +29,9 @@
 
 @interface CSIOpusDecoder : NSObject
 
+@property (nonatomic) opus_int32 bitrate;
+@property (nonatomic) BOOL variableBitrate;
+
 + (CSIOpusDecoder*)decoderWithSampleRate:(opus_int32)sampleRate channels:(int)channels frameDuration:(double)frameDuration;
 
 - (id)initWithSampleRate:(opus_int32)sampleRate channels:(int)channels frameDuration:(double)frameDuration;

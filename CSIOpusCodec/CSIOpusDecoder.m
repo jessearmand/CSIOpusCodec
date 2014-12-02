@@ -75,6 +75,18 @@
     return self;
 }
 
+- (void)setBitrate:(opus_int32)bitrate {
+    _bitrate = bitrate;
+    
+    opus_decoder_ctl(self.decoder, OPUS_SET_BITRATE(bitrate));
+}
+
+- (void)setVariableBitrate:(BOOL)variableBitrate {
+    _variableBitrate = variableBitrate;
+    
+    opus_decoder_ctl(self.decoder, OPUS_SET_VBR(variableBitrate));
+}
+
 - (void)dealloc
 {
     free(_decodeBuffer);

@@ -70,6 +70,18 @@
     return self;
 }
 
+- (void)setBitrate:(opus_int32)bitrate {
+    _bitrate = bitrate;
+    
+    opus_encoder_ctl(self.encoder, OPUS_SET_BITRATE(bitrate));
+}
+
+- (void)setVariableBitrate:(BOOL)variableBitrate {
+    _variableBitrate = variableBitrate;
+    
+    opus_encoder_ctl(self.encoder, OPUS_SET_VBR(variableBitrate));
+}
+
 + (CSIOpusEncoder *)encoderWithSampleRate:(opus_int32)sampleRate channels:(int)channels frameDuration:(double)frameDuration
 {
     CSIOpusEncoder *encoder = [[CSIOpusEncoder alloc] initWithSampleRate:sampleRate channels:channels frameDuration:frameDuration];
