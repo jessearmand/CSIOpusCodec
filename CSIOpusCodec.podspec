@@ -20,5 +20,5 @@ Pod::Spec.new do |s|
   s.header_mappings_dir = "opus/include"
   s.public_header_files = "#{s.name}/*.h", "opus/include/*.h"
   s.xcconfig = { "HEADER_SEARCH_PATHS" => "${PODS_ROOT}/#{s.name}/opus/include" }
-  s.dependency = "libopus", "~>1.1"
+  s.dependencies = { "libopus" => "~> 1.1" }
 end
