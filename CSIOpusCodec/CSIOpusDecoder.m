@@ -113,6 +113,15 @@
             NSLog(@"Output queue at %fs. Clearing.", bufferDuration);
             CSIDataQueueClear(self.outputBuffer);
         }
+        
+#if DEBUG
+        int bandwidth = opus_packet_get_bandwidth((const unsigned char *)self.decodeBuffer);
+        NSLog(@"Opus decoder packet bandwidth at %d Hz", bandwidth);
+        
+        opus_int32 bitrate = 0;
+        opus_decoder_ctl(self.decoder, OPUS_GET_BITRATE(&bitrate));
+        NSLog(@"Opus decoder bitrate at %d bps", bitrate);
+#endif
     }
 }
 
@@ -133,7 +142,9 @@
         int bytesAvailable = (int)CSIDataQueueGetLength(self.outputBuffer);
         if(bytesAvailable < (int)totalBytesRequested)
         {
-//            NSLog(@"Couldnt fill buffer. Needed %d bytes but only have %d", totalBytesRequested, bytesAvailable);
+#if DEBUG
+            NSLog(@"Couldnt fill buffer. Needed %d bytes but only have %d", totalBytesRequested, bytesAvailable);
+#endif
             return 0;
         }
 

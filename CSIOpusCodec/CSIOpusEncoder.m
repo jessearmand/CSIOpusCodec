@@ -90,10 +90,12 @@
 
 - (NSArray *)encodeSample:(CMSampleBufferRef)sampleBuffer
 {
-//    CMItemCount numSamplesInBuffer = CMSampleBufferGetNumSamples(sampleBuffer);
-//    CMTime duration = CMSampleBufferGetDuration(sampleBuffer);
-//    Float64 durationInSeconds = CMTimeGetSeconds(duration);
-//    NSLog(@"The sample rate is %f", numSamplesInBuffer / durationInSeconds);
+#if DEBUG
+    CMItemCount numSamplesInBuffer = CMSampleBufferGetNumSamples(sampleBuffer);
+    CMTime duration = CMSampleBufferGetDuration(sampleBuffer);
+    Float64 durationInSeconds = CMTimeGetSeconds(duration);
+    NSLog(@"The sample rate is %f", numSamplesInBuffer / durationInSeconds);
+#endif
 
     CMBlockBufferRef blockBuffer = CMSampleBufferGetDataBuffer(sampleBuffer);
     AudioBufferList audioBufferList;
@@ -132,7 +134,16 @@
         NSData *encodedData = [NSData dataWithBytes:self.encodeBuffer length:(NSUInteger)result];
         [output addObject:encodedData];
     }
-
+    
+#if DEBUG
+    int bandwidth = opus_packet_get_bandwidth(self.encodeBuffer);
+    NSLog(@"Opus encoder packet bandwidth at %d Hz", bandwidth);
+    
+    opus_int32 bitrate = 0;
+    opus_encoder_ctl(self.encoder, OPUS_GET_BITRATE(&bitrate));
+    NSLog(@"Opus encoder bitrate at %d bps", bitrate);
+#endif
+    
     return output;
 }
 
