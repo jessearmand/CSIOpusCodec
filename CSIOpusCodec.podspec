@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "CSIOpusCodec"
-  s.version      = "0.0.4"
+  s.version      = "0.0.5"
   s.summary      = "Another Objective-C wrapper for Opus Codec."
 
   s.description  = <<-DESC
@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => "MIT", :file => "LICENSE" }
   s.author       = "Sam Leitch"
   s.platform     = :ios
-  s.source       = { :git => "https://github.com/jessearmand/CSIOpusCodec.git", :tag => "0.0.4" }
+  s.source       = { :git => "https://github.com/jessearmand/CSIOpusCodec.git", :tag => "0.0.5" }
   s.requires_arc = true
 
   s.source_files  = "#{s.name}/*.{h,m,c}", "opus/include/*.h"
